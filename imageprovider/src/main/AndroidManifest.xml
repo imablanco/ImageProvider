@@ -1,0 +1,18 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ablanco.imageprovider" >
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <application>
+        <provider
+            android:name=".ImageFileProvider"
+            android:authorities="${applicationId}.image_provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+</manifest>
