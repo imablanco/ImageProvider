@@ -9,10 +9,10 @@ import java.io.IOException
 import java.io.InputStream
 
 /**
- * Created by Álvaro Blanco Cabrero on 02/05/2018.
+ * Created by Álvaro Blanco Cabrero on 16/09/2018.
  * ImageProvider.
  */
-class ExifInterfaceHelper private constructor(inputStream: InputStream) {
+internal class ExifInterfaceHelper private constructor(inputStream: InputStream) {
 
     private var exifInterface: ExifInterface? = null
 

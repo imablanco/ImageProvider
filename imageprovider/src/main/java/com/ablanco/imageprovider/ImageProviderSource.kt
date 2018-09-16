@@ -1,15 +1,12 @@
 package com.ablanco.imageprovider
 
-import android.content.Intent
 import android.graphics.Bitmap
 
 /**
- * Created by Álvaro Blanco Cabrero on 24/05/2018.
+ * Created by Álvaro Blanco Cabrero on 16/09/2018.
  * ImageProvider.
  */
-abstract class ImageProviderSource {
+interface ImageProviderSource {
 
-    abstract fun getImage()
-
-    abstract fun onImageResult(requestCode: Int, resultCode: Int, data: Intent?) : Bitmap?
+    fun getImage(callback: (Bitmap?) -> Unit)
 }

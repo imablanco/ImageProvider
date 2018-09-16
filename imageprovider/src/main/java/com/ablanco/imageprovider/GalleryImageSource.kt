@@ -3,28 +3,34 @@ package com.ablanco.imageprovider
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 
 /**
- * Created by Álvaro Blanco Cabrero on 24/05/2018.
+ * Created by Álvaro Blanco Cabrero on 16/09/2018.
  * ImageProvider.
  */
-class GalleryImageSource(private val activity: Activity) : ImageProviderSource() {
-    override fun getImage() {
-        val intent = Intent(Intent.ACTION_PICK).setType("image/*")
-        activity.startActivityForResult(
-            Intent.createChooser(intent, "TakePhoto"), //TODO
-            REQUEST_CODE
-        )
+internal class GalleryImageSource(private val activity: Activity) : ImageProviderSource {
+
+    private val requestHandler: RequestHandler by lazy {
+        RequestHandler()
     }
 
-    override fun onImageResult(requestCode: Int, resultCode: Int, data: Intent?): Bitmap? {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            return data?.data?.toBitmap(activity)
+    override fun getImage(callback: (Bitmap?) -> Unit) {
+        val intent = Intent(Intent.ACTION_PICK).setType("image/*")
+        requestHandler.startForResult(activity, intent) { result, data ->
+            callback(if (result == Activity.RESULT_OK) onImageResult(data) else null)
+        }
+    }
+
+    private fun onImageResult(data: Intent?): Bitmap? {
+        try {
+            return activity.contentResolver.openFileDescriptor(data?.data, "r")?.use {
+                BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return null
     }
 
-    companion object {
-        private const val REQUEST_CODE = 1889
-    }
 }

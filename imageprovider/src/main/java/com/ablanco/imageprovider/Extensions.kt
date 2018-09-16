@@ -2,9 +2,7 @@ package com.ablanco.imageprovider
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.net.Uri
 import java.io.File
 import java.io.FileOutputStream
 
@@ -13,17 +11,6 @@ import java.io.FileOutputStream
  * ImageProvider.
  */
 
-fun Uri.toBitmap(context: Context): Bitmap? {
-    try {
-        return context.contentResolver.openFileDescriptor(this, "r")?.use {
-            BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-
-    return null
-}
 
 /**
  * Turns receiver Bitmap into a File
@@ -32,7 +19,7 @@ fun Uri.toBitmap(context: Context): Bitmap? {
  * Note: in order to get a content:// Uri for this File, the path supplied must be the same as defined
  * in the FileProvider that creates the content Uris
  */
-fun Bitmap.toFile(context: Context, path: String? = null): File? =
+internal fun Bitmap.toFile(context: Context, path: String? = null): File? =
     try {
         //create directory if path is specified
         val directory = path?.let { File(context.cacheDir, it).apply { mkdir() } }
