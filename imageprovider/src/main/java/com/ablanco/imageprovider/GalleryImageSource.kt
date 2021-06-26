@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.fragment.app.FragmentActivity
 
 /**
  * Created by Álvaro Blanco Cabrero on 16/09/2018.
  * ImageProvider.
  */
-internal class GalleryImageSource(private val activity: Activity) : ImageProviderSource {
+internal class GalleryImageSource(private val activity: FragmentActivity) : ImageProviderSource {
 
     private val requestHandler: RequestHandler by lazy {
         RequestHandler()
@@ -23,14 +24,12 @@ internal class GalleryImageSource(private val activity: Activity) : ImageProvide
     }
 
     private fun onImageResult(data: Intent?): Bitmap? {
-        try {
-            return activity.contentResolver.openFileDescriptor(data?.data, "r")?.use {
+
+        val dataUri = data?.data ?: return null
+        return runCatching {
+            activity.contentResolver.openFileDescriptor(dataUri, "r")?.use {
                 BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return null
+        }.getOrNull()
     }
-
 }

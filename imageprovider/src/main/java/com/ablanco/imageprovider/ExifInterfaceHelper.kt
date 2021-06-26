@@ -2,7 +2,7 @@ package com.ablanco.imageprovider
 
 import android.content.Context
 import android.net.Uri
-import android.support.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -17,19 +17,16 @@ internal class ExifInterfaceHelper private constructor(inputStream: InputStream)
     private var exifInterface: ExifInterface? = null
 
     companion object {
-        fun fromFile(file: File): ExifInterfaceHelper? =
-            try {
-                ExifInterfaceHelper(FileInputStream(file))
-            } catch (e: Exception) {
-                null
-            }
 
-        fun fromUri(context: Context, uri: Uri): ExifInterfaceHelper? =
-            try {
-                ExifInterfaceHelper(context.contentResolver.openInputStream(uri))
-            } catch (e: Exception) {
-                null
-            }
+        fun fromFile(file: File): ExifInterfaceHelper? = runCatching {
+            fromInputStream(FileInputStream(file))
+        }.getOrNull()
+
+        fun fromUri(context: Context, uri: Uri): ExifInterfaceHelper? = runCatching {
+            context.contentResolver.openInputStream(uri)?.let(::fromInputStream)
+        }.getOrNull()
+
+        private fun fromInputStream(inputStream: InputStream) = ExifInterfaceHelper(inputStream)
     }
 
     init {

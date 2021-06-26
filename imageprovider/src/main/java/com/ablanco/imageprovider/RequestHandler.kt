@@ -1,8 +1,8 @@
 package com.ablanco.imageprovider
 
-import android.app.Activity
-import android.app.Fragment
 import android.content.Intent
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 
 /**
  * Created by Álvaro Blanco Cabrero on 16/09/2018.
@@ -18,25 +18,23 @@ internal class RequestHandler {
      * Note: intent MUST set an Activity as a component
      */
     fun startForResult(
-        activity: Activity,
+        activity: FragmentActivity,
         intent: Intent,
         callback: (resultCode: Int, data: Intent?) -> Unit
     ) {
-        getRequestFragment(activity)?.startForResult(intent, callback)
-                ?: callback(Activity.RESULT_CANCELED, null)
+        getRequestFragment(activity).startForResult(intent, callback)
     }
 
-    private fun getRequestFragment(activity: Activity): RequestFragment? {
+    private fun getRequestFragment(activity: FragmentActivity): RequestFragment {
         var requestFragment = activity
-            .fragmentManager
+            .supportFragmentManager
             .findFragmentByTag(REQUEST_FRAGMENT_TAG) as? RequestFragment?
         return if (requestFragment == null) {
             requestFragment = RequestFragment()
-            activity.fragmentManager
+            activity.supportFragmentManager
                 .beginTransaction()
                 .add(requestFragment, REQUEST_FRAGMENT_TAG)
-                .commitAllowingStateLoss()
-            activity.fragmentManager.executePendingTransactions()
+                .commitNowAllowingStateLoss()
             requestFragment
         } else {
             requestFragment
