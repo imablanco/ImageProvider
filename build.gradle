@@ -41,6 +41,6 @@ task clean(type: Delete) {
 apply from: "${rootDir}/scripts/publish-root.gradle"
 
 ext {
-    PUBLISH_GROUP_ID = 'com.ablanco.imageprovider'
-    PUBLISH_VERSION = '0.1.1'
+    PUBLISH_GROUP_ID = 'io.github.imablanco'
+    PUBLISH_VERSION = '1.0.1'
 }

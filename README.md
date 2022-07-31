@@ -1,14 +1,16 @@
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.imablanco/imageprovider/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.imablanco/imageprovider)
+
 # ImageProvider
 The easiest way to gather images from camera, gallery, etc.
 Retrieve images from camera or gallery without all the boilerplate required (declaring FileProviders, Activtiy result management, bitmap conversion, etc.)
 
 ## Installation
 
-ImageProvider is available in the JCenter, so you just need to add it as a dependency
-```gradle
-implementation 'com.ablanco.imageprovider:imageprovider:{latest version}'
+ImageProvider is available in the Maven Central, so you just need to add it as a dependency
+```groovy
+implementation 'io.github.imablanco:imageprovider:{latest version}'
 ```
-where `{latest version}` corresponds to published version in JCenter  [ ![Download](https://api.bintray.com/packages/ablanco/maven/imageprovider/images/download.svg) ](https://bintray.com/ablanco/maven/imageprovider/_latestVersion)
 
 ## Usage 
 
@@ -31,7 +33,7 @@ ImageProvider(activity).getImage(ImageSource.GALLERY){ bitmap ->
             
 ```
 
-Thats all!
+That's all!
 
 ### Note
 
@@ -40,7 +42,7 @@ Camera permissions request is beyond the scope of this library, so make sure you
 License
 =======
 
-    Copyright 2018 Álvaro Blanco Cabrero
+    Copyright 2022 Álvaro Blanco Cabrero
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
