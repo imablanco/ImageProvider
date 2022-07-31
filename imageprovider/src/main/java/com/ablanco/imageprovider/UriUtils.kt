@@ -2,7 +2,7 @@ package com.ablanco.imageprovider
 
 import android.content.Context
 import android.net.Uri
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import java.io.File
 
 /**
