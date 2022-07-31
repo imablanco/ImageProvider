@@ -26,32 +26,20 @@ internal class CameraImageSource(private val activity: Activity) : ImageProvider
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         photoFileUri?.let { cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri) }
-        cameraIntent.resolveActivity(activity.packageManager)?.let {
-            requestHandler.startForResult(activity, cameraIntent) { result, _ ->
-                callback(if (result == Activity.RESULT_OK) onImageResult() else null)
-            }
+        requestHandler.startForResult(activity, cameraIntent) { result, _ ->
+            callback(if (result == Activity.RESULT_OK) onImageResult() else null)
         }
     }
 
     private fun onImageResult(): Bitmap? {
-        var bitmap = try {
-            BitmapFactory.decodeStream(activity.contentResolver.openInputStream(photoFileUri))
-        } catch (e: Throwable) {
-            null
-        }
-
-        bitmap = bitmap?.let { image ->
-            /*Check image orientation and rotate it to 0 degree orientation*/
-            photoFileUri?.let {
-                ExifInterfaceHelper.fromUri(activity, it)?.let {
-                    val matrix = Matrix().apply {
-                        postRotate(it.orientation.toFloat())
-                    }
-                    image.applyMatrix(matrix)
-                } ?: image
-            }
-        }
-
-        return bitmap
+        val uri = photoFileUri ?: return null
+        return runCatching {
+            BitmapFactory.decodeStream(activity.contentResolver.openInputStream(uri))
+        }.map { image ->
+            ExifInterfaceHelper.fromUri(activity, uri)?.let {
+                val matrix = Matrix().apply { postRotate(it.orientation.toFloat()) }
+                image.applyMatrix(matrix)
+            } ?: image
+        }.getOrNull()
     }
 }

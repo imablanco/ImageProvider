@@ -23,14 +23,12 @@ internal class GalleryImageSource(private val activity: Activity) : ImageProvide
     }
 
     private fun onImageResult(data: Intent?): Bitmap? {
-        try {
-            return activity.contentResolver.openFileDescriptor(data?.data, "r")?.use {
+        val uri = data?.data ?: return null
+        return runCatching {
+            activity.contentResolver.openFileDescriptor(uri, "r")?.use {
                 BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return null
+        }.getOrNull()
     }
 
 }

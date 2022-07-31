@@ -2,7 +2,7 @@ package com.ablanco.imageprovider
 
 import android.content.Context
 import android.net.Uri
-import android.support.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -24,17 +24,16 @@ internal class ExifInterfaceHelper private constructor(inputStream: InputStream)
                 null
             }
 
-        fun fromUri(context: Context, uri: Uri): ExifInterfaceHelper? =
-            try {
-                ExifInterfaceHelper(context.contentResolver.openInputStream(uri))
-            } catch (e: Exception) {
-                null
-            }
+        fun fromUri(context: Context, uri: Uri): ExifInterfaceHelper? = runCatching {
+            val inputStream = requireNotNull(context.contentResolver.openInputStream(uri))
+            ExifInterfaceHelper(inputStream)
+        }.getOrNull()
     }
 
     init {
         try {
-            exifInterface = ExifInterface(inputStream)
+            exifInterface =
+                ExifInterface(inputStream)
         } catch (e: IOException) {
             // Handle any errors
         } finally {
